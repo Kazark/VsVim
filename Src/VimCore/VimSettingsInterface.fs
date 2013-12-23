@@ -6,6 +6,7 @@ open Microsoft.VisualStudio.Text.Editor
 open Microsoft.VisualStudio.Text.Operations
 open Microsoft.VisualStudio.Text.Outlining
 open Microsoft.VisualStudio.Utilities
+open System
 open System.Diagnostics
 open System.Runtime.CompilerServices
 open System.Collections.Generic
@@ -124,6 +125,13 @@ type SettingKind =
     | Number
     | String
     | Toggle
+
+[<Flags>]
+type BackspaceFlags =
+    | None = 0
+    | Indent = 0x1
+    | EndOfLine = 0x2
+    | Start = 0x4
 
 /// A concrete value attached to a setting
 [<RequireQualifiedAccess>]
@@ -261,6 +269,9 @@ and IVimGlobalSettings =
     /// The multi-value option for determining backspace behavior.  Valid values include 
     /// indent, eol, start.  Usually accessed through the IsBackSpace helpers
     abstract Backspace : string with get, set
+
+    /// Strongly typed Backspace option
+    abstract BackspaceFlags : BackspaceFlags with get, set
 
     /// Opacity of the caret.  This must be an integer between values 0 and 100 which
     /// will be converted into a double for the opacity of the caret

@@ -181,6 +181,14 @@ type internal GlobalSettings() =
             ("stopsel", KeyModelOptions.StopSelection)
         ]
 
+    /// Mappings between backspace setting namse and actual potions
+    static let BackspaceFlagsMapping = 
+        [
+            ("indent", BackspaceFlags.Indent)
+            ("eol", BackspaceFlags.EndOfLine)
+            ("start", BackspaceFlags.Start)
+        ]
+
     static member DisableAllCommand = _disableAllCommand
 
     member x.IsCommaSubOptionPresent optionName suboptionName =
@@ -284,6 +292,9 @@ type internal GlobalSettings() =
         member x.AutoCommand
             with get() = _map.GetBoolValue AutoCommandName
             and set value = _map.TrySetValue AutoCommandName (SettingValue.Toggle value) |> ignore
+        member x.BackspaceFlags
+            with get() = x.GetCommaOptions BackspaceName BackspaceFlagsMapping BackspaceFlags.None (fun x y -> x ||| y)
+            and set value = x.SetCommaOptions BackspaceName BackspaceFlagsMapping value Util.IsFlagSet
         member x.Backspace 
             with get() = _map.GetStringValue BackspaceName
             and set value = _map.TrySetValue BackspaceName (SettingValue.String value) |> ignore

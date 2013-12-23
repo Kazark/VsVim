@@ -81,6 +81,22 @@ namespace Vim.UnitTest
         public sealed class MiscTest : GlobalSettingsTest
         {
             [Fact]
+            public void BackspaceTest()
+            {
+                var all = new[] 
+                {
+                    BackspaceFlags.None,
+                    BackspaceFlags.Indent,
+                    BackspaceFlags.EndOfLine | BackspaceFlags.Start
+                };
+                foreach (var cur in all)
+                {
+                    _globalSettings.BackspaceFlags = cur;
+                    Assert.Equal(cur, _globalSettings.BackspaceFlags);
+                }
+            }
+
+            [Fact]
             public void Sanity1()
             {
                 var all = _globalSettings.AllSettings;
