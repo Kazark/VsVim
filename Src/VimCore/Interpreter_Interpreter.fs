@@ -1247,7 +1247,7 @@ type VimInterpreter
             | Some lines -> x.RunScript lines
 
     /// Split the window
-    member x.RunSplit behavior fileOptions commandOption = 
+    member x.RunSplit behavior fileOptions commandOption fileName = 
         let SplitArgumentsAreValid fileOptions commandOption =
             if not (List.isEmpty fileOptions) then
                 _statusUtil.OnError (Resources.Interpreter_OptionNotSupported "[++opt]")
@@ -1260,6 +1260,8 @@ type VimInterpreter
 
         if SplitArgumentsAreValid fileOptions commandOption then
             behavior _textView 
+            if Option.isSome fileName then
+                _vimHost.LoadFileIntoExistingWindow fileName.Value _textView |> ignore
         else
             ()
 
@@ -1454,7 +1456,7 @@ type VimInterpreter
         | LineCommand.GoToLastTab -> x.RunGoToLastTab()
         | LineCommand.GoToNextTab count -> x.RunGoToNextTab count
         | LineCommand.GoToPreviousTab count -> x.RunGoToPreviousTab count
-        | LineCommand.HorizontalSplit (lineRange, fileOptions, commandOptions) -> x.RunSplit _vimHost.SplitViewHorizontally fileOptions commandOptions
+        | LineCommand.HorizontalSplit (lineRange, fileOptions, commandOptions, fileName) -> x.RunSplit _vimHost.SplitViewHorizontally fileOptions commandOptions fileName
         | LineCommand.Join (lineRange, joinKind) -> x.RunJoin lineRange joinKind
         | LineCommand.JumpToLastLine -> x.RunJumpToLastLine()
         | LineCommand.JumpToLine number -> x.RunJumpToLine number
@@ -1492,7 +1494,7 @@ type VimInterpreter
         | LineCommand.Unlet (ignoreMissing, nameList) -> x.RunUnlet ignoreMissing nameList
         | LineCommand.UnmapKeys (keyNotation, keyRemapModes, mapArgumentList) -> x.RunUnmapKeys keyNotation keyRemapModes mapArgumentList
         | LineCommand.Version -> x.RunVersion()
-        | LineCommand.VerticalSplit (lineRange, fileOptions, commandOptions) -> x.RunSplit _vimHost.SplitViewVertically fileOptions commandOptions
+        | LineCommand.VerticalSplit (lineRange, fileOptions, commandOptions, fileName) -> x.RunSplit _vimHost.SplitViewVertically fileOptions commandOptions fileName
         | LineCommand.VisualStudioCommand (command, argument) -> x.RunVisualStudioCommand command argument
         | LineCommand.Write (lineRange, hasBang, fileOptionList, filePath) -> x.RunWrite lineRange hasBang fileOptionList filePath
         | LineCommand.WriteAll hasBang -> x.RunWriteAll hasBang

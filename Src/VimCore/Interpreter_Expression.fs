@@ -515,7 +515,7 @@ and [<RequireQualifiedAccess>] LineCommand =
     ///    doesn't specify a range can be used here but usage indicates it can
     ///  - The provided ++opt
     ///  - The provided +cmd
-    | HorizontalSplit of LineRangeSpecifier * FileOption list * CommandOption option
+    | HorizontalSplit of LineRangeSpecifier * FileOption list * CommandOption option * string option
 
     /// The if command
     | If of ConditionalBlock list
@@ -644,7 +644,7 @@ and [<RequireQualifiedAccess>] LineCommand =
     | Version
 
     /// Process the 'vsplit' command. Values are as per HorizontalSplit
-    | VerticalSplit of LineRangeSpecifier * FileOption list * CommandOption option
+    | VerticalSplit of LineRangeSpecifier * FileOption list * CommandOption option * string option
 
     /// The :substitute command.  The argument order is range, pattern, replace,
     /// substitute flags and count

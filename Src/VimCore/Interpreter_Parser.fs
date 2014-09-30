@@ -1542,20 +1542,19 @@ type Parser
         let hasBang = x.ParseBang()
         LineCommand.QuickFixPrevious (count, hasBang)
 
+    member x.ParseOptionalFinalFilename() =
+        x.SkipBlanks()
+        if _tokenizer.IsAtEndOfLine then
+            None
+        else
+            x.ParseRestOfLine() |> Some
+
     /// Parse out the quit and write command.  This includes 'wq', 'xit' and 'exit' commands.
     member x.ParseQuitAndWrite lineRange = 
         let hasBang = x.ParseBang()
-
         x.SkipBlanks()
         let fileOptionList = x.ParseFileOptions()
-
-        x.SkipBlanks()
-        let fileName =
-            if _tokenizer.IsAtEndOfLine then
-                None
-            else
-                x.ParseRestOfLine() |> Some
-
+        let fileName = x.ParseOptionalFinalFilename()
         LineCommand.QuitWithWrite (lineRange, hasBang, fileOptionList, fileName)
 
     /// Parse out a variable name from the system.  This handles the scoping prefix 
@@ -1610,15 +1609,7 @@ type Parser
         let hasBang = x.ParseBang()
         x.SkipBlanks()
         let fileOptionList = x.ParseFileOptions()
-
-        // Pares out the final fine name if it's provided
-        x.SkipBlanks()
-        let fileName =
-            if _tokenizer.IsAtEndOfLine then
-                None
-            else
-                x.ParseRestOfLine() |> Some
-
+        let fileName = x.ParseOptionalFinalFilename()
         LineCommand.Write (lineRange, hasBang, fileOptionList, fileName)
 
     member x.ParseWriteAll() =
@@ -1925,11 +1916,11 @@ type Parser
     member x.ParseSplit splitType lineRange =
         x.SkipBlanks()
         let fileOptionList = x.ParseFileOptions()
-
         x.SkipBlanks()
         let commandOption = x.ParseCommandOption()
+        let fileName = x.ParseOptionalFinalFilename()
 
-        splitType (lineRange, fileOptionList, commandOption)
+        splitType (lineRange, fileOptionList, commandOption, fileName)
 
     /// Parse out the :qal and :quitall commands
     member x.ParseQuitAll () =
