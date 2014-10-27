@@ -1612,7 +1612,9 @@ type Parser
 
     member x.ParseWinDo() =
         x.SkipBlanks()
-        x.ParseRestOfLine() |> LineCommand.WinDo
+        match x.ParseRestOfLine() with
+        | "" -> LineCommand.ParseError "Argument required"
+        | x -> LineCommand.WinDo x
 
     member x.ParseWrite lineRange = 
         let hasBang = x.ParseBang()

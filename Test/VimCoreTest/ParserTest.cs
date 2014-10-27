@@ -1011,6 +1011,13 @@ let x = 42
                 var command = ParseLineCommand("windo  echo @%");
                 Assert.Equal("echo @%", command.AsWinDo().Item);
             }
+
+            [Fact]
+            public void ParseRequiresArgument()
+            {
+                var command = ParseLineCommand("windo  ");
+                Assert.True(command.IsParseError);
+            }
         }
 
         public sealed class SetTest : ParserTest
