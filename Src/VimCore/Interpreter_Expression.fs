@@ -672,6 +672,12 @@ and [<RequireQualifiedAccess>] LineCommand =
     /// Unmap the key notation in the given modes
     | UnmapKeys of string * KeyRemapMode list * KeyMapArgument list
 
+    /// Execute a command in every window. My instinct was to make this "of LineCommand"
+    /// instead of "of string", but the way the Vim documentation describes it, it seems
+    /// that it re-parses the command in every window. I do not know whether there may
+    /// be behavior dependent on this.
+    | WinDo of string
+
     /// Write the 
     ///  - The line range to write out
     ///  - Whether or not a ! was provided

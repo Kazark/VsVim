@@ -187,6 +187,7 @@ type Parser
         ("version", "ve")
         ("vscmd", "vsc")
         ("vsplit", "vs")
+        ("windo", "wind") // :wind not in Vim documentation, but experimentally demonstrated
         ("write","w")
         ("wq", "")
         ("wall", "wa")
@@ -1609,6 +1610,10 @@ type Parser
             let argument = x.ParseRestOfLine()
             LineCommand.HostCommand (command, argument)
 
+    member x.ParseWinDo() =
+        x.MoveToNextLine() |> ignore
+        LineCommand.WinDo ""
+
     member x.ParseWrite lineRange = 
         let hasBang = x.ParseBang()
         x.SkipBlanks()
@@ -2124,6 +2129,7 @@ type Parser
                 | "vnoremap"-> noRange (fun () -> x.ParseMapKeysNoRemap false [KeyRemapMode.Visual;KeyRemapMode.Select])
                 | "vunmap" -> noRange (fun () -> x.ParseMapUnmap false [KeyRemapMode.Visual;KeyRemapMode.Select])
                 | "wall" -> noRange x.ParseWriteAll
+                | "windo" -> noRange x.ParseWinDo
                 | "write" -> x.ParseWrite lineRange
                 | "wq" -> x.ParseQuitAndWrite lineRange
                 | "xit" -> x.ParseQuitAndWrite lineRange

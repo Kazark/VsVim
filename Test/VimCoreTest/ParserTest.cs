@@ -989,6 +989,23 @@ let x = 42
             }
         }
 
+        public sealed class WinDoTest : ParserTest
+        {
+            [Fact]
+            public void ParsesShortFormOfWinDoCommand()
+            {
+                var command = ParseLineCommand("wind echo @%");
+                Assert.True(command.IsWinDo);
+            }
+
+            [Fact]
+            public void ParsesLongFormOfWinDoCommand()
+            {
+                var command = ParseLineCommand("windo echo @%");
+                Assert.True(command.IsWinDo);
+            }
+        }
+
         public sealed class SetTest : ParserTest
         {
             /// <summary>
@@ -1743,7 +1760,7 @@ let x = 42
             /// Make sure the abbreviation can be expanded
             /// </summary>
             [Fact]
-            public void TryExpand_Abbrevation()
+            public void TryExpand_Abbreviation()
             {
                 var parser = CreateParser("");
                 foreach (var tuple in Parser.s_LineCommandNamePair)
