@@ -190,6 +190,14 @@ namespace Vim.UnitTest
         }
 
         /// <summary>
+        /// LineCommand as WinDo
+        /// </summary>
+        public static LineCommand.WinDo AsWinDo(this LineCommand lineCommand)
+        {
+            return (LineCommand.WinDo)lineCommand;
+        }
+
+        /// <summary>
         /// LineCommand as Write
         /// </summary>
         public static LineCommand.Write AsWrite(this LineCommand lineCommand)

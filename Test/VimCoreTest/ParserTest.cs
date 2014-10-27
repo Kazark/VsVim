@@ -1004,6 +1004,13 @@ let x = 42
                 var command = ParseLineCommand("windo echo @%");
                 Assert.True(command.IsWinDo);
             }
+
+            [Fact]
+            public void ParsesCommandThatIsToBeRunInEachWindowToDoAsString()
+            {
+                var command = ParseLineCommand("windo  echo @%");
+                Assert.Equal("echo @%", command.AsWinDo().Item);
+            }
         }
 
         public sealed class SetTest : ParserTest

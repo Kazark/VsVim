@@ -1611,8 +1611,8 @@ type Parser
             LineCommand.HostCommand (command, argument)
 
     member x.ParseWinDo() =
-        x.MoveToNextLine() |> ignore
-        LineCommand.WinDo ""
+        x.SkipBlanks()
+        x.ParseRestOfLine() |> LineCommand.WinDo
 
     member x.ParseWrite lineRange = 
         let hasBang = x.ParseBang()
