@@ -643,6 +643,12 @@ and [<RequireQualifiedAccess>] LineCommand =
     /// Process the 'source' command.  
     | Source of bool * string
 
+    /// Execute a command in every window. My instinct was to make this "of LineCommand"
+    /// instead of "of string", but the way the Vim documentation describes it, it seems
+    /// that it re-parses the command in every window. I do not know whether there may
+    /// be behavior dependent on this.
+    | TabDo of string
+
     // Close all tabs but this one
     | TabOnly
 

@@ -182,6 +182,15 @@ namespace Vim.UnitTest
         }
 
         /// <summary>
+        /// LineCommand as TabDo
+        /// </summary>
+        public static LineCommand.TabDo AsTabDo(this LineCommand lineCommand)
+        {
+            return (LineCommand.TabDo)lineCommand;
+        }
+
+
+        /// <summary>
         /// LineCommand as UnmapKeys
         /// </summary>
         public static LineCommand.UnmapKeys AsUnmapKeys(this LineCommand lineCommand)

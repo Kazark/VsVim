@@ -989,6 +989,37 @@ let x = 42
             }
         }
 
+        public sealed class TabDoTest : ParserTest
+        {
+            [Fact]
+            public void ParsesShortFormOfTabDoCommand()
+            {
+                var command = ParseLineCommand("tabd echo @%");
+                Assert.True(command.IsTabDo);
+            }
+
+            [Fact]
+            public void ParsesLongFormOfTabDoCommand()
+            {
+                var command = ParseLineCommand("tabdo echo @%");
+                Assert.True(command.IsTabDo);
+            }
+
+            [Fact]
+            public void ParsesCommandThatIsToBeRunInEachTabAsString()
+            {
+                var command = ParseLineCommand("tabdo  echo @%");
+                Assert.Equal("echo @%", command.AsTabDo().Item);
+            }
+
+            [Fact]
+            public void ParseRequiresArgument()
+            {
+                var command = ParseLineCommand("tabdo  ");
+                Assert.True(command.IsParseError);
+            }
+        }
+
         public sealed class SetTest : ParserTest
         {
             /// <summary>
@@ -1743,7 +1774,7 @@ let x = 42
             /// Make sure the abbreviation can be expanded
             /// </summary>
             [Fact]
-            public void TryExpand_Abbrevation()
+            public void TryExpand_Abbreviation()
             {
                 var parser = CreateParser("");
                 foreach (var tuple in Parser.s_LineCommandNamePair)

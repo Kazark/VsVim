@@ -172,6 +172,7 @@ type Parser
         ("smagic", "sm")
         ("snomagic", "sno")
         ("t", "t")
+        ("tabdo", "tabd")
         ("tabedit", "tabe")
         ("tabfirst", "tabfir")
         ("tablast", "tabl")
@@ -1500,6 +1501,13 @@ type Parser
 
         result
 
+    member x.ParseTabDo() =
+        x.SkipBlanks()
+        match x.ParseRestOfLine() with
+        | "" -> LineCommand.ParseError "Argument required"
+        | x -> LineCommand.TabDo x
+
+
     /// Parse out the 'tabnew' / 'tabedit' commands.  They have the same set of arguments
     member x.ParseTabNew() = 
         let filePath = x.ParseRestOfLineAsFilePath()
@@ -2103,6 +2111,7 @@ type Parser
                 | "snoremap"-> noRange (fun () -> x.ParseMapKeysNoRemap false [KeyRemapMode.Select])
                 | "sunmap" -> noRange (fun () -> x.ParseMapUnmap false [KeyRemapMode.Select])
                 | "t" -> x.ParseCopyTo lineRange 
+                | "tabdo" -> noRange x.ParseTabDo
                 | "tabedit" -> noRange x.ParseTabNew
                 | "tabfirst" -> noRange (fun () -> LineCommand.GoToFirstTab)
                 | "tabrewind" -> noRange (fun () -> LineCommand.GoToFirstTab)
