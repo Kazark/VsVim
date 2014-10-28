@@ -989,6 +989,37 @@ let x = 42
             }
         }
 
+        public sealed class BufDoTest : ParserTest
+        {
+            [Fact]
+            public void ParsesShortFormOfBufDoCommand()
+            {
+                var command = ParseLineCommand("bufd echo @%");
+                Assert.True(command.IsBufDo);
+            }
+
+            [Fact]
+            public void ParsesLongFormOfBufDoCommand()
+            {
+                var command = ParseLineCommand("bufdo echo @%");
+                Assert.True(command.IsBufDo);
+            }
+
+            [Fact]
+            public void ParsesCommandThatIsToBeRunInEachBufferAsString()
+            {
+                var command = ParseLineCommand("bufdo  echo @%");
+                Assert.Equal("echo @%", command.AsBufDo().Item);
+            }
+
+            [Fact]
+            public void ParseRequiresArgument()
+            {
+                var command = ParseLineCommand("bufdo  ");
+                Assert.True(command.IsParseError);
+            }
+        }
+
         public sealed class SetTest : ParserTest
         {
             /// <summary>
@@ -1743,7 +1774,7 @@ let x = 42
             /// Make sure the abbreviation can be expanded
             /// </summary>
             [Fact]
-            public void TryExpand_Abbrevation()
+            public void TryExpand_Abbreviation()
             {
                 var parser = CreateParser("");
                 foreach (var tuple in Parser.s_LineCommandNamePair)

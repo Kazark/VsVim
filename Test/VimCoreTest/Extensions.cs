@@ -78,6 +78,14 @@ namespace Vim.UnitTest
         }
 
         /// <summary>
+        /// LineCommand as BufDo
+        /// </summary>
+        public static LineCommand.BufDo AsBufDo(this LineCommand lineCommand)
+        {
+            return (LineCommand.BufDo)lineCommand;
+        }
+
+        /// <summary>
         /// LineCommand as ChangeDirectory
         /// </summary>
         public static LineCommand.ChangeDirectory AsChangeDirectory(this LineCommand lineCommand)

@@ -412,6 +412,12 @@ and [<RequireQualifiedAccess>] LineCommand =
     /// The :behave command to set common behaviors in certain environments
     | Behave of string
 
+    /// Execute a command in every buffer. My instinct was to make this "of LineCommand"
+    /// instead of "of string", but the way the Vim documentation describes it, it seems
+    /// that it re-parses the command in every window. I do not know whether there may
+    /// be behavior dependent on this.
+    | BufDo of string
+
     /// The :call command to invoke a function.  The first string is the 
     | Call of CallInfo
 

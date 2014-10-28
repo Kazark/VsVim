@@ -121,6 +121,7 @@ type Parser
     static let s_LineCommandNamePair = [
         ("autocmd", "au")
         ("behave", "be")
+        ("bufdo", "bufd") // This is undocumented, but it seems :bufd is an abbreviation for :bufdo
         ("call", "cal")
         ("cd", "cd")
         ("chdir", "chd")
@@ -861,6 +862,12 @@ type Parser
             let mode = _tokenizer.CurrentToken.TokenText
             _tokenizer.MoveNextToken()
             LineCommand.Behave mode
+
+    member x.ParseBufDo() =
+        x.SkipBlanks()
+        match x.ParseRestOfLine() with
+        | "" -> LineCommand.ParseError "Argument required"
+        | x -> LineCommand.BufDo x
 
     member x.ParseCall lineRange = 
         x.SkipBlanks()
@@ -2027,6 +2034,7 @@ type Parser
                 match name with
                 | "autocmd" -> noRange x.ParseAutoCommand
                 | "behave" -> noRange x.ParseBehave
+                | "bufdo" -> noRange x.ParseBufDo
                 | "call" -> x.ParseCall lineRange
                 | "cd" -> noRange x.ParseChangeDirectory
                 | "chdir" -> noRange x.ParseChangeDirectory
