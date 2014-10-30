@@ -614,15 +614,15 @@ type VimInterpreter
             | VariableValue.String str -> str
             | _ -> "<error>"
         _statusUtil.OnStatus valueAsString
+
+    member x.ParseAndRunLineCommand command = 
+        Parser(_globalSettings, _vimData).ParseLineCommand command |> x.RunLineCommand
     
     /// Run the execute command
     member x.RunExecute expression =
-        let parser = Parser(_globalSettings, _vimData)
-        let execute str =
-            parser.ParseLineCommand str |> x.RunLineCommand
         match x.RunExpression expression  with
-        | VariableValue.Number number -> execute (string number)
-        | VariableValue.String str -> execute str
+        | VariableValue.Number number -> x.ParseAndRunLineCommand (string number)
+        | VariableValue.String str -> x.ParseAndRunLineCommand str
         | _ -> _statusUtil.OnStatus "Error executing expression"
 
     /// Edit the specified file
@@ -1318,6 +1318,14 @@ type VimInterpreter
             | Some substituteData -> substituteData.SearchPattern, substituteData.Substitute
         x.RunSubstitute lineRange pattern replace flags 
 
+    member x.RunTabDo command =
+        for tabIndex in [0.._vimHost.TabCount-1] do
+            try
+                _vimHost.GoToTab tabIndex
+                x.ParseAndRunLineCommand command
+            with
+                _ as ex -> _statusUtil.OnError ex.Message
+
     member x.RunTabNew filePath = 
         let filePath = filePath |> OptionUtil.getOrDefault ""
         _vimHost.LoadFileIntoNewWindow filePath |> ignore
@@ -1495,6 +1503,7 @@ type VimInterpreter
         | LineCommand.Source (hasBang, filePath) -> x.RunSource hasBang filePath
         | LineCommand.Substitute (lineRange, pattern, replace, flags) -> x.RunSubstitute lineRange pattern replace flags
         | LineCommand.SubstituteRepeat (lineRange, substituteFlags) -> x.RunSubstituteRepeatLast lineRange substituteFlags
+        | LineCommand.TabDo command -> x.RunTabDo command
         | LineCommand.TabNew filePath -> x.RunTabNew filePath
         | LineCommand.TabOnly -> x.RunTabOnly()
         | LineCommand.Undo -> x.RunUndo()
