@@ -713,6 +713,9 @@ type BuiltinFunctionCall =
     | Localtime
     | Nr2char of int
 
+type IBuiltinFunctionCaller =
+    abstract Call : BuiltinFunctionCall -> VariableValue
+
 /// Engine which interprets Vim commands and expressions
 type IVimInterpreter =
 

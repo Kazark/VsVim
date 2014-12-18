@@ -80,12 +80,14 @@ type BuiltinFunctionCaller
             char nr
             |> string
             |> VariableValue.String
+    interface IBuiltinFunctionCaller with
+        member x.Call func = x.Call func
 
 [<Sealed>]
 [<Class>]
 type VimScriptFunctionCaller
     (
-        _builtinCaller : BuiltinFunctionCaller,
+        _builtinCaller : IBuiltinFunctionCaller,
         _statusUtil : IStatusUtil
     ) =
     let _getValue = VariableValueUtil(_statusUtil)
